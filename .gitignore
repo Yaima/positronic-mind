@@ -1,0 +1,45 @@
+# Instance data: one person's values, memory, and trace. Never committed.
+# Leading slashes anchor these to the repo root. Without one, a pattern whose
+# only slash is trailing matches at any depth and would shadow the same-named
+# package under src/positronic_mind/ (trace/ did exactly that).
+values/values.md
+values/rules/
+/instance/
+/data/
+memory/episodes/
+memory/graph/
+reader/notes/
+/trace/
+*.db
+*.sqlite
+
+# Models and weights
+/models/
+*.gguf
+*.safetensors
+*.bin
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+
+# Pipeline local config and run logs
+docs/pipeline/pipeline.local.json
+docs/pipeline/agent-runs.log
+.claude/settings.local.json
+.codex/config.local.toml
+junit*.xml
+_to_delete/
+docs/pipeline/agent-runs.jsonl

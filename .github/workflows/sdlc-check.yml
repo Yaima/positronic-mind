@@ -1,0 +1,24 @@
+# sdlc-pipeline merge gate for positronic-mind. The PR body must contain a line "Feature: <slug>".
+# Checks the feature's reports, binds them to this tree, and with --run executes the repo's own
+# test, lint, typecheck, and security commands from docs/pipeline/pipeline.json on this checkout.
+name: sdlc-check
+on: { pull_request: {} }
+permissions:
+  contents: read
+jobs:
+  sdlc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with: { python-version: "3.11" }
+      - run: |
+          sudo apt-get install -y jq
+          python -m pip install -U pip
+          python -m pip install -e ".[dev]"
+      - name: check feature
+        env: { BODY: "${{ github.event.pull_request.body }}" }
+        run: |
+          slug=$(printf '%s' "$BODY" | grep -oE '^Feature: *[a-z0-9-]+' | head -1 | awk '{print $2}')
+          [ -n "$slug" ] || { echo "PR body needs a line: Feature: <slug>"; exit 1; }
+          bash docs/pipeline/enforcement/check-feature.sh "$slug" --run

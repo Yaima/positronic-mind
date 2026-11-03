@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "positronic-mind"
+version = "0.0.1"
+description = "A personal AI agent with a values ledger, a conscience-first veto, and a full decision trace, built as a global-workspace cognitive architecture on open-weight models."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Yaima Valdivia" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.10", "pip-audit>=2.7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["positronic_mind"]
+mypy_path = "src"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

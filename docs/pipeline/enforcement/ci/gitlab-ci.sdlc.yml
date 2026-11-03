@@ -1,0 +1,13 @@
+# Include from .gitlab-ci.yml:  include: { local: docs/pipeline/enforcement/ci/gitlab-ci.sdlc.yml }
+# The MR description (pr-body.md) must contain a line "Feature: <slug>".
+# This job checks the reports and binds them to the tree. To also run test_cmd/lint_cmd/typecheck_cmd here
+# (the authoritative check), add --run and use an image that has the repo's toolchain instead of alpine.
+sdlc-check:
+  stage: test
+  image: alpine:3.20
+  rules: [{ if: $CI_MERGE_REQUEST_IID }]
+  before_script: [apk add --no-cache bash git jq]
+  script:
+    - slug=$(printf '%s' "$CI_MERGE_REQUEST_DESCRIPTION" | grep -oE '^Feature: *[a-z0-9-]+' | head -1 | awk '{print $2}')
+    - '[ -n "$slug" ] || { echo "MR description needs a line: Feature: <slug>"; exit 1; }'
+    - bash docs/pipeline/enforcement/check-feature.sh "$slug"
